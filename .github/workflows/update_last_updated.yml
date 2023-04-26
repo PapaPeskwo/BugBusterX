@@ -6,13 +6,12 @@ on:
       - main
       - master
 
-
 jobs:
   update_last_updated:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Profile Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           repository: PapaPeskwo/PapaPeskwo
           token: ${{ secrets.PROFILE_UPDATE_TOKEN }}
@@ -34,9 +33,14 @@ jobs:
               gsub(/Last Updated[^|]*/, "Last Updated: " date, $3);
             }
             print
-            }' README.md > README.tmp && mv README.tmp README.md
+          }' README.md > README.tmp && mv README.tmp README.md
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git add README.md
-          git commit -m "Update Last Updated date for $REPO_NAME"
-          git push
+
+          if git diff-index --quiet HEAD --; then
+            echo "No changes detected. Skipping commit."
+          else
+            git commit -m "Update Last Updated date for $REPO_NAME"
+            git push
+          fi
