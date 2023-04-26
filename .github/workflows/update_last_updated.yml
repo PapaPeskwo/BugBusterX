@@ -1,0 +1,36 @@
+name: Update Last Updated Date in Profile
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  update_last_updated:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Profile Repository
+        uses: actions/checkout@v2
+        with:
+          repository: PapaPeskwo/PapaPeskwo
+          token: ${{ secrets.PROFILE_UPDATE_TOKEN }}
+          path: profile
+
+      - name: Checkout Current Repository
+        uses: actions/checkout@v2
+        with:
+          path: current_repo
+
+      - name: Update Last Updated Date in Profile
+        run: |
+          cd current_repo
+          REPO_NAME=$(basename `git rev-parse --show-toplevel`)
+          LAST_UPDATED=$(git log -1 --format=%cd --date=format:'%d/%m/%Y')
+          cd ../profile
+          sed -i "s|\\($REPO_NAME).*|\\1|; s|\\(Last Updated\\).*|\\1: $LAST_UPDATED|" README.md
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add README.md
+          git commit -m "Update Last Updated date for $REPO_NAME"
+          git push
