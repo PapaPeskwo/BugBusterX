@@ -1,6 +1,11 @@
 # BugBusterX | Android Virus Scanner
 
-This is a simple script to scan an APK or EXE file for viruses and malware using the VirusTotal API.
+This is a simple script to scan an APK or EXE file for viruses and malware using the VirusTotal API. The script also works on 
+Windows 10, as long as you add single or normal quotation marks around the path to the file:
+```bash
+py BugBusterX.py 'path\to\file\'
+```
+
 ## Prerequisites
 
 Before you can use this script, make sure you have the following:
