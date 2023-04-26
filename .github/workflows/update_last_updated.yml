@@ -29,7 +29,12 @@ jobs:
           REPO_NAME=$(basename `git rev-parse --show-toplevel`)
           LAST_UPDATED=$(git log -1 --format=%cd --date=format:'%d/%m/%Y')
           cd ../profile
-          sed -i "s|\($REPO_NAME\)[^|]*|\1|; s|\($REPO_NAME\)\([^|]*|\)\([^|]*|\).*Last Updated.*|\1\2\3: $LAST_UPDATED|" README.md
+          awk -v repo="$REPO_NAME" -v date="$LAST_UPDATED" -F'|' -v OFS='|' '{
+            if ($1 ~ repo) {
+              gsub(/Last Updated[^|]*/, "Last Updated: " date, $3);
+            }
+            print
+            }' README.md > README.tmp && mv README.tmp README.md
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git add README.md
