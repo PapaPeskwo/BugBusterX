@@ -1,10 +1,8 @@
 name: Update Last Updated Date in Profile
 
 on:
-  push:
-    branches:
-      - main
-      - master
+  workflow_dispatch:
+
 
 jobs:
   update_last_updated:
