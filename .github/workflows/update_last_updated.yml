@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: PapaPeskwo/PapaPeskwo
-          token: ${{ secrets.PROFILE_UPDATE_TOKEN }}
+          token: ${{ secrets.PROFILE_UPDATE_TOKEN || github.token }}
           path: profile
 
       - name: Checkout Current Repository
